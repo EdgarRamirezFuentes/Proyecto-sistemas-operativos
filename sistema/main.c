@@ -1,14 +1,7 @@
-/* Bibliotecas necesarias para el uso de hilos */
+#include "server.h"
 
-#include "main.h"
-
-/* Función de los thread */
-void *mostrarMenu (void *args) {
-    
-    pthreads_exit(NULL);
-}
-
-
-int main() {
-    pthread_t punto_de_venta1;
+int main(void) 
+{
+    printf("Funciono");
+    return 0;
 }
