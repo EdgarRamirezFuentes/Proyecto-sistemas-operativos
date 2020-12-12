@@ -55,7 +55,7 @@ void modificarProducto(char *idProducto)
                 printf("\n 3. Precio \n");
                 scanf("%c",&opcion);
            }
-           if(opcion==1)
+           if(opcion=='1')
            {
                printf("\n Ingrese el nuevo nombre del producto:\n");
                gets(producto.nombre);
@@ -66,7 +66,7 @@ void modificarProducto(char *idProducto)
                existe=1;
                break;
            }
-           else if(opcion==2)
+           else if(opcion=='2')
            {
                printf("\n Ingrese el nuevo precio del producto:\n");
                gets(producto.descripcion);
@@ -77,7 +77,7 @@ void modificarProducto(char *idProducto)
                existe=1;
                break;
            }
-           else if(opcion==3)
+           else if(opcion=='3')
            {
                printf("\n Ingrese el nuevo precio del producto:\n");
                scanf("%f",&producto.precio);
