@@ -1,11 +1,6 @@
 #include "server.h"
 /*----------------- Actividades de manejo de archivos -------------- */
   
-  void registrarProductos()
-  {
-    FILE *almacenProductos = NULL;
-  }
-  
   void crearAlmacenProductos()
   {
     FILE *almacenProductos = NULL;
@@ -26,7 +21,12 @@
     /* Gestión de almacen */
 void registrarNuevoProducto(struct Producto producto) 
 {
-
+    FILE *almacenProductos = NULL;
+    if(!fopen("./productos.dat", "rb")) crearAlmacenProductos();
+    almacenProductos = fopen("./productos.dat", "ab");
+    fwrite(&producto, sizeof(struct Producto), 1, almacenProductos);
+    fclose(almacenProductos);
+    puts("El producto ha sido registrado con exito");
 }
 
 void modificarProducto(char *idProducto) 
@@ -105,7 +105,21 @@ void eliminarProducto(char *idProducto)
 
 void mostrarProductos() 
 {
-
+    FILE *almacenProductos = NULL;
+    if(!fopen("./productos.dat", "rb")) crearAlmacenProductos();
+    almacenProductos = fopen("./productos.dat", "rb");
+    struct Producto producto;
+    while(!feof(almacenProductos))
+    {
+        fread(&producto, sizeof(struct Producto), 1, almacenProductos);
+        printf("ID Producto: %s\n", producto.id);
+        printf("Nombre: %s\n", producto.nombre);
+        printf("Descripcion:\n %s \n", producto.descripcion);
+        printf("Precio: %.2f\n", producto.precio);
+        printf("Existencia: %d\n", producto.existencia);
+        puts("\n\n-------------------------------------------------------------------------\n\n");
+    }
+    fclose(almacenProductos);
 }
 
 void incrementarExistenciaProducto(char *idProducto) 
@@ -134,4 +148,3 @@ void generarTicketDeCompra(struct Ticket_compra ticket)
 {
 
 }
-

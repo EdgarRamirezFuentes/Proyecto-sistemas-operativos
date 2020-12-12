@@ -2,12 +2,18 @@
 
 int main(void) 
 {
-    if(!fopen("./productos.dat", "r")){
-        crearAlmacenProductos();
-    }else {
-        printf("Ya estoy perrazo");
-    }
-    if(!fopen("./ticketsCompra.dat", "r")) crearAlmacenTicketsCompra();
-    printf("Funciono\n");
+    struct Producto producto;
+    __fpurge(stdin);
+    fgets(&producto.id, 30, stdin);
+    __fpurge(stdin);
+    fgets(&producto.nombre, 100, stdin);
+    __fpurge(stdin);
+    fgets(&producto.descripcion, 100, stdin);
+    __fpurge(stdin);
+    scanf("%f", &producto.precio); 
+    __fpurge(stdin);
+    scanf("%d", &producto.existencia); 
+    registrarNuevoProducto(producto);
+    mostrarProductos();
     return 0;
 }

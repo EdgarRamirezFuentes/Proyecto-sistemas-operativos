@@ -9,6 +9,7 @@
 #include <string.h>
 #include <sys/types.h>
 #include <fcntl.h>
+#include <stdio_ext.h>
 
 /* Structs del sistema */
 

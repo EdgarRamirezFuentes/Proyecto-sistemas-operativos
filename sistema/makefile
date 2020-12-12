@@ -12,3 +12,9 @@ run: a.out
 
 clear:
 	rm a.out main.o server.o
+
+delete-productos:
+	rm productos.dat
+
+delete-ticketsCompra:
+	rm ticketsCompra.dat
