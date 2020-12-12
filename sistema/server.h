@@ -41,7 +41,7 @@ struct Ticket_compra
 
 void registrarProductos();
 void crearAlmacenProductos(); 
-void crearAlmacenTicketCompra();
+void crearAlmacenTicketsCompra();
 
 /*----------------- Actividades del administrador ------------------ */
 

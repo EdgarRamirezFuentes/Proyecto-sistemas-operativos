@@ -14,10 +14,10 @@
     fclose(almacenProductos);
  }
   
-  void crearAlmacenTicketCompra()
+  void crearAlmacenTicketsCompra()
   {   
     FILE *historialTicketsCompra = NULL;
-    almacenProductos = fopen("./ticketsCompra.dat", "wb+");
+    historialTicketsCompra  = fopen("./ticketsCompra.dat", "wb+");
     if(!historialTicketsCompra) exit(1);
     fclose(historialTicketsCompra);
   }
