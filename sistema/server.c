@@ -1,87 +1,73 @@
 #include "server.h"
-
-/* Funciones thread */
-
+/*----------------- Actividades de manejo de archivos -------------- */
+  
+  void registrarProductos()
+  {
+    FILE *almacenProductos = NULL;
+  }
+  
+  void crearAlmacenProductos()
+  {
+    FILE *almacenProductos = NULL;
+    almacenProductos = fopen("./productos.dat", "wb+");
+    if(!almacenProductos) exit(1);
+    fclose(almacenProductos);
+ }
+  
+  void crearAlmacenTicketCompra()
+  {   
+    FILE *historialTicketsCompra = NULL;
+    almacenProductos = fopen("./ticketsCompra.dat", "wb+");
+    if(!historialTicketsCompra) exit(1);
+    fclose(historialTicketsCompra);
+  }
 
 /* Administrador */
     /* Gestión de almacen */
-void *registrarNuevoProducto(void *args) 
+void registrarNuevoProducto(struct Producto producto) 
 {
 
 }
 
-void *modificarProducto(void *args) 
+void modificarProducto(char *idProducto) 
 {
 
 }
 
-void *eliminarProducto(void *args) 
+void eliminarProducto(char *idProducto) 
 {
 
 }
 
-void *mostrarProductos(void *args) 
+void mostrarProductos() 
 {
 
 }
 
-void *incrementarExistenciaProducto(void *args) 
+void incrementarExistenciaProducto(char *idProducto) 
 {
 
 }
 
-void *decrementarExistenciaProducto(void *args) 
-{
-
-}
-
-    /* Gestión de tickets de venta */
-
-void *mostrarTicketDeVenta(void *args) 
-{
-
-}
-
-void *buscarTicketDeVenta(void *args) 
-{
-
-}
-
-void *generarTicketDeVenta(void *args) 
+void decrementarExistenciaProducto(char *idProducto) 
 {
 
 }
 
     /* Gestión de tickets de compra */
-void *mostrarTicketsDeCompra(void *args)
+void mostrarTicketsDeCompra()
 {
 
 }
 
 
-void *buscarTicketDeCompra(void *args) 
+void buscarTicketDeCompra(char *idTicketCompra) 
 {
 
 }
 
-void *generarTicketDeCompra(void *args) 
+void generarTicketDeCompra(struct Ticket_compra ticket) 
 {
 
 }
 
-/* Actividades del vendedor */
-    /* Gestión de ventas */
-void *agregarVenta(void *args) 
-{
-
-}
-
-void *agregarProductoDeVenta(void *args) 
-{
-
-}
-
-void *quitarProductoDeVenta(void *args) 
-{
-
-}

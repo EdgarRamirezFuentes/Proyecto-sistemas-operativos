@@ -12,7 +12,8 @@
 
 /* Structs del sistema */
 
-struct Producto {
+struct Producto 
+{
     char id[30];
     char nombre[100];
     char descripcion[100];
@@ -20,44 +21,40 @@ struct Producto {
     int existencia;
 };
 
-struct Ticket_venta {
+struct Ticket_venta 
+{
     char id[30];
     char fecha[70];
     struct Producto productos[100];
     float total;
 };
 
-struct Ticket_compra{
+struct Ticket_compra
+{
     char id[30];
     char fecha[70];
     struct Producto productos[100];
     float total;
 };
 
+/*----------------- Actividades de manejo de archivos -------------- */
+
+void registrarProductos();
+void crearAlmacenProductos(); 
+void crearAlmacenTicketCompra();
 
 /*----------------- Actividades del administrador ------------------ */
 
     /* Gestión de almacen */
-void *registrarNuevoProducto(void*);
-void *modificarProducto(void*);
-void *eliminarProducto(void*);
-void *mostrarProductos(void*);
-void *incrementarExistenciaProducto(void*);
-void *decrementarExistenciaProducto(void*);
-    /* Gestión de tickets de venta */
-void *mostrarTicketsDeVenta(void*);
-void *buscarTicketDeVenta(void*);
-void *generarTicketDeVenta(void*);
+void registrarNuevoProducto(struct Producto);
+void modificarProducto(char*);
+void eliminarProducto(char*);
+void mostrarProductos();
+void incrementarExistenciaProducto(char*);
+void decrementarExistenciaProducto(char*);
     /* Gestión de tickets de compra */
-void *mostrarTicketsDeCompra(void*);
-void *buscarTicketDeCompra(void*);
-void *generarTicketDeCompra(void*);
-
-/*----------------- Actividades del vendedor ------------------ */
-
-    /* Gestión de ventas */
-void *agregarVenta(void*);
-void *agregarProductoDeVenta(void*);
-void *quitarProductoDeventa(void*);
+void mostrarTicketsDeCompra();
+void buscarTicketDeCompra(char*);
+void generarTicketDeCompra(struct Ticket_compra);
 
 #endif
