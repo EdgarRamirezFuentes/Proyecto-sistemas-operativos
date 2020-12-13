@@ -51,7 +51,7 @@ int registrarNuevoProducto(struct Producto);
 struct Producto tomarDatosProducto();
 int validarExistenciaProducto(char*);
 int modificarProducto(char*);
-void eliminarProducto(char*);
+int eliminarProducto(char*);
 void mostrarProductos();
 void incrementarExistenciaProducto(char*, struct Producto*);
 void decrementarExistenciaProducto(char*);

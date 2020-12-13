@@ -152,9 +152,43 @@ int modificarProducto(char *idProducto)
     return estado;
 }
 
-void eliminarProducto(char *idProducto) 
+int eliminarProducto(char *idProducto) 
 {
+    FILE *archivo;
+	FILE *temporal;
+	struct Producto producto;
+    int estado=1;
+    
+    archivo = fopen("productos.dat", "rb");
+	temporal = fopen("temporal.dat", "wb");
 
+    if (archivo == NULL || temporal == NULL)
+		estado = 0;
+
+    else 
+    {
+		/* Se copia en el archivo temporal los registros válidos */
+		fread(&producto, sizeof(producto), 1, archivo);
+		while (!feof(archivo)) 
+        {
+			if (!strcmp(idProducto,producto.id)) 
+            {
+			}
+            else
+                fwrite(&producto, sizeof(producto), 1, temporal);
+                
+			fread(&producto, sizeof(producto), 1, archivo);
+		}
+		
+		fclose(archivo);
+		fclose(temporal);
+
+        system("rm productos.dat");
+		system("mv temporal.dat productos.dat");
+        
+        
+    }
+    return estado;
 }
 
 void mostrarProductos() 
@@ -303,6 +337,27 @@ void seleccionDeOpcion (char opcion)
         }
         break;
     case '4':
+        /*Elimina un producto*/
+        puts("Ingresa el ID producto a modificar: ");
+        __fpurge(stdin);
+        fgets(idProducto, 30, stdin);
+        if(validarExistenciaProducto(idProducto))
+        {
+            puts("Datos del producto a eliminar\n ");
+            imprimirProducto(buscarProducto(idProducto));
+
+            if(eliminarProducto(idProducto))
+            {
+                sleep(2);
+                puts("\n Producto eliminado con exito\n");
+            }
+                
+        }
+        else
+        {
+            system("clear");
+            puts("No existe producto en el almacen con el ID ingresado");
+        }
         break;
     case '5':
 
