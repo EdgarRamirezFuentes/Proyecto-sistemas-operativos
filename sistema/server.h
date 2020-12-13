@@ -50,7 +50,7 @@ void crearAlmacenTicketsCompra();
 int registrarNuevoProducto(struct Producto);
 struct Producto tomarDatosProducto();
 int validarExistenciaProducto(char*);
-void modificarProducto(char*);
+int modificarProducto(char*);
 void eliminarProducto(char*);
 void mostrarProductos();
 void incrementarExistenciaProducto(char*, struct Producto*);

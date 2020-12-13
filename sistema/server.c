@@ -76,12 +76,26 @@ int validarExistenciaProducto(char *idProducto)
     fclose(almacenProductos);
     return 0;
 }
+char menuModificar()
+{
+    char opcion;
+    do
+    {
+        printf("\n ¿Que dato desea modificar? \n");
+        printf("\n 1. Nombre \n");
+        printf("\n 2. Descripcion \n");
+        printf("\n 3. Precio \n");
+        scanf("%c",&opcion);
+    }
+    while(opcion!='1' && opcion!='2' && opcion!='3');
 
-void modificarProducto(char *idProducto) 
+    return opcion;
+}
+int modificarProducto(char *idProducto) 
 {
     FILE *modificarProducto;
-    int existe=0;
-    char opcion;
+    int existe=0,estado=1,pos;
+    char o;
     struct Producto producto;
 
     modificarProducto=fopen("./productos.dat","r+b");
@@ -92,50 +106,42 @@ void modificarProducto(char *idProducto)
 
     while(!feof(modificarProducto))
     {
-        if (idProducto==producto.id)
+        if(!strcmp(idProducto,producto.id))
         {
-           while(opcion!='1' || opcion!='2' || opcion!='3')
-           { 
-                system("clear");
-                printf("\n ¿Que dato desea modificar? \n");
-                printf("\n 1. Nombre \n");
-                printf("\n 2. Descripcion \n");
-                printf("\n 3. Precio \n");
-                scanf("%c",&opcion);
-           }
-           if(opcion=='1')
-           {
-               printf("\n Ingrese el nuevo nombre del producto:\n");
-               gets(producto.nombre);
-               int pos=ftell(modificarProducto)-sizeof(struct Producto);
-               fseek(modificarProducto,pos,SEEK_SET);
-               fwrite(&producto.nombre, sizeof(struct Producto), 1, modificarProducto);
-               printf("\n Se modifico el nombre del producto.\n");
-               existe=1;
-               break;
-           }
-           else if(opcion=='2')
-           {
-               printf("\n Ingrese el nuevo precio del producto:\n");
-               gets(producto.descripcion);
-               int pos=ftell(modificarProducto)-sizeof(struct Producto);
-               fseek(modificarProducto,pos,SEEK_SET);
-               fwrite(&producto.descripcion, sizeof(struct Producto), 1, modificarProducto);
-               printf("\n Se modifico la descripcion del producto.\n");
-               existe=1;
-               break;
-           }
-           else if(opcion=='3')
-           {
-               printf("\n Ingrese el nuevo precio del producto:\n");
-               scanf("%f",&producto.precio);
-               int pos=ftell(modificarProducto)-sizeof(struct Producto);
-               fseek(modificarProducto,pos,SEEK_SET);
-               fwrite(&producto.precio, sizeof(struct Producto), 1, modificarProducto);
-               printf("\n Se modifico el precio del producto.\n");
-               existe=1;
-               break;
-           }
+            o=menuModificar();
+            switch(o)
+            {
+                case '1': //Modifica el nombre
+                    puts("Ingrese el nuevo nombre del producto: ");
+                    __fpurge(stdin);
+                    fgets(producto.nombre,100,stdin);
+                    pos=ftell(modificarProducto)-sizeof(struct Producto);
+                    fseek(modificarProducto,pos,SEEK_SET);
+                    fwrite(&producto, sizeof(struct Producto), 1, modificarProducto);
+                    printf("Se modifico el nombre del producto con exito.\n");
+                    existe=1;
+                break;
+                case '2': //Modifica la descripcion
+                    puts("Ingrese la nueva descripcion: ");
+                    __fpurge(stdin);
+                    fgets(producto.descripcion,100,stdin);
+                    pos=ftell(modificarProducto)-sizeof(struct Producto);
+                    fseek(modificarProducto,pos,SEEK_SET);
+                    fwrite(&producto, sizeof(struct Producto), 1, modificarProducto);
+                    printf("Se modifico la descripcion del producto con exito.\n");
+                    existe=1;
+                break;
+                case '3': //Modifica el precio
+                    puts("Ingrese el nuevo precio:");
+                    __fpurge(stdin);
+                    scanf("%f",&producto.precio);
+                    pos=ftell(modificarProducto)-sizeof(struct Producto);
+                    fseek(modificarProducto,pos,SEEK_SET);
+                    fwrite(&producto, sizeof(struct Producto), 1, modificarProducto);
+                    printf("Se modifico el precio del producto con exito.\n");
+                    existe=1;
+                break;
+            }
         }
         fread(&producto, sizeof(struct Producto), 1, modificarProducto);
     }
@@ -143,7 +149,7 @@ void modificarProducto(char *idProducto)
         printf("No existe un producto con este codigo\n");
     fclose(modificarProducto);
 
-
+    return estado;
 }
 
 void eliminarProducto(char *idProducto) 
@@ -268,6 +274,17 @@ void seleccionDeOpcion (char opcion)
         break;
     case '2':
         /* Modificar datos de un producto */
+        puts("Ingresa el ID producto a modificar: ");
+        __fpurge(stdin);
+        fgets(idProducto, 30, stdin);
+        if(modificarProducto(idProducto))
+        {
+            puts("\n");
+        }
+        else
+        {
+            puts("\n Error al modificar producto\n");
+        }
         break;
     case '3':
         /* Buscar datos de un producto */
