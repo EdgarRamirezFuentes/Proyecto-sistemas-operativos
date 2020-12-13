@@ -47,15 +47,22 @@ void crearAlmacenTicketsCompra();
 /*----------------- Actividades del administrador ------------------ */
 
     /* Gestión de almacen */
-void registrarNuevoProducto(struct Producto);
+int registrarNuevoProducto(struct Producto);
+struct Producto tomarDatosProducto();
+int validarExistenciaProducto(char*);
 void modificarProducto(char*);
 void eliminarProducto(char*);
 void mostrarProductos();
-void incrementarExistenciaProducto(char*);
+void incrementarExistenciaProducto(char*, struct Producto*);
 void decrementarExistenciaProducto(char*);
+struct Producto buscarProducto(char*);
+void imprimirProducto(struct Producto);
     /* Gestión de tickets de compra */
 void mostrarTicketsDeCompra();
 void buscarTicketDeCompra(char*);
 void generarTicketDeCompra(struct Ticket_compra);
 
+/* Interfaz principal servidor */
+void interfazPrincipalServidor();
+void seleccionDeOpcion(char);
 #endif
