@@ -28,7 +28,6 @@ int registrarNuevoProducto(struct Producto nuevoProducto)
     /* Verificación de existencia de almacen de productos */
     if(!fopen("./productos.dat", "rb")) crearAlmacenProductos();
     almacenProductos = fopen("./productos.dat", "ab");
-    printf("ID de nuevo producto: %s\n", nuevoProducto.id);
     if(!validarExistenciaProducto(nuevoProducto.id)){
         fwrite(&nuevoProducto, sizeof(struct Producto), 1, almacenProductos);
         estado = 1;
@@ -204,7 +203,6 @@ void mostrarProductos()
         fread(&producto, sizeof(struct Producto), 1, almacenProductos);
     }
     fclose(almacenProductos);
-    getc(stdin);
 }
 
 struct Producto buscarProducto(char *idProducto)
@@ -244,27 +242,163 @@ void decrementarExistenciaProducto(char *idProducto)
 }
 
     /* Gestión de tickets de compra */
+
 void mostrarTicketsDeCompra()
 {
-
+    FILE *historialTicketsDeCompra = NULL;
+    if(!fopen("./ticketsCompra.dat", "rb")) crearAlmacenTicketsCompra();
+    historialTicketsDeCompra = fopen("./ticketsCompra.dat", "rb");
+    struct TicketCompra ticket;
+    fread(&ticket, sizeof(struct TicketCompra), 1, historialTicketsDeCompra);
+    while(!feof(historialTicketsDeCompra))
+    {
+        imprimirTicketDeCompra(ticket);
+        fread(&ticket, sizeof(struct TicketCompra), 1, historialTicketsDeCompra);
+    }
+    fclose(historialTicketsDeCompra);
 }
 
 
-void buscarTicketDeCompra(char *idTicketCompra) 
+struct TicketCompra buscarTicketDeCompra(char *idTicketCompra) 
 {
-
+    FILE *historialTicketsDeCompra = NULL;
+    if(!fopen("./ticketsCompra.dat", "rb"))crearAlmacenTicketsCompra();
+    historialTicketsDeCompra = fopen("./ticketsCompra.dat", "rb");
+    struct TicketCompra ticket;
+    fread(&ticket, sizeof(struct TicketCompra), 1, historialTicketsDeCompra);
+    while(!feof(historialTicketsDeCompra))
+    {
+        if(!strcmp(idTicketCompra, ticket.id)) break;
+        fread(&ticket, sizeof(struct TicketCompra), 1, historialTicketsDeCompra);
+    }
+    fclose(historialTicketsDeCompra);
+    return ticket;
 }
 
-void generarTicketDeCompra(struct Ticket_compra ticket) 
+int registrarTicketDeCompra(struct TicketCompra ticket) 
 {
-
+    FILE *historialTicketsDeCompra = NULL;
+    int estado = 1;
+    if(!fopen("./ticketsCompra.dat", "rb")) crearAlmacenTicketsCompra();
+    historialTicketsDeCompra = fopen("./ticketsCompra.dat", "ab");
+    if(!verificarExistenciaTicketDeCompra(ticket.id)) {
+        fwrite(&ticket, sizeof(struct TicketCompra), 1, historialTicketsDeCompra);
+        estado = 1;
+    }else {
+        estado = 0;
+    }
+    fclose(historialTicketsDeCompra);
+    return estado;
 }
 
+struct TicketCompra tomarDatosTicketDeCompra()
+{
+    struct TicketCompra nuevoTicket;
+    puts("Ingresa el id del ticket de compra: ");
+    __fpurge(stdin);
+    fgets(nuevoTicket.id, 30, stdin);
+    puts("Ingresa la fecha del ticket de compra: ");
+    __fpurge(stdin);
+    fgets(nuevoTicket.fecha, 70, stdin);
+    do
+    {
+        puts("Ingresa la cantidad de productos diferentes comprados del ticket de compra: [1-100]");
+        __fpurge(stdin);
+        scanf("%d", &nuevoTicket.cantidadProductos);
+    } while (nuevoTicket.cantidadProductos < 0 && nuevoTicket.cantidadProductos > 100);
+    for(int i = 0; i < nuevoTicket.cantidadProductos; i++)
+    {
+        agregarProductoLista(nuevoTicket.productos, i);
+    }
+    return nuevoTicket;
+}
+
+void agregarProductoLista(struct ProductoLista lista[], int posicion)
+{
+    char idProducto[30];
+    struct Producto productoAlmacen;
+    int existe = 1;
+    do
+    {
+        system("clear");
+        puts("El id del producto a agregar ya debe estar registrado en el almacen");
+        puts("Ingresa el id del producto: ");
+        __fpurge(stdin);
+        fgets(idProducto, 100, stdin);
+        existe = validarExistenciaProducto(idProducto);
+        if(!existe) 
+        {
+            puts("El id ingresado no se encuentra en el almacen");
+            sleep(5);
+        }
+        
+    } while (!existe);
+    productoAlmacen = buscarProducto(idProducto);
+    strcpy(lista[posicion].id, productoAlmacen.id);
+    strcpy(lista[posicion].nombre, productoAlmacen.nombre);
+    puts("Ingresa la cantidad del producto: ");
+    __fpurge(stdin);
+    scanf("%d", &lista[posicion].cantidad);
+    puts("Ingresa el precio del producto: ");
+    __fpurge(stdin);
+    scanf("%f", &lista[posicion].precio);
+    lista[posicion].total = lista[posicion].precio * lista[posicion].cantidad;
+}
+
+void imprimirListaProductos(struct ProductoLista lista[], int cantidad)
+{
+    for (int i = 0; i < cantidad; i++)
+    {
+        printf("ID del producto: %s", lista[i].id);
+        printf("Nombre del producto: %s", lista[i].nombre);
+        printf("Cantidad del producto: %d\n", lista[i].cantidad);
+        printf("Precio del producto: %.2f\n", lista[i].precio);
+        printf("Total del producto: %.2f\n", lista[i].total);
+        puts("\n");
+    }
+    
+}
+
+int verificarExistenciaTicketDeCompra(char *idticketCompra)
+{
+    FILE *historialTicketsDeCompra = NULL;
+    if(!fopen("./ticketsCompra.dat", "rb")) crearAlmacenTicketsCompra();
+    historialTicketsDeCompra = fopen("./ticketsCompra.dat", "rb");
+    struct TicketCompra ticket;
+    fread(&ticket, sizeof(struct TicketCompra), 1, historialTicketsDeCompra);
+    while(!feof(historialTicketsDeCompra))
+    {
+        if(!strcmp(idticketCompra, ticket.id)) return 1;
+        fread(&ticket, sizeof(struct TicketCompra), 1, historialTicketsDeCompra);
+    }
+    fclose(historialTicketsDeCompra);
+    return 0;
+}
+
+void imprimirTicketDeCompra(struct TicketCompra ticket)
+{
+    printf("ID ticket de compra: %s", ticket.id);
+    printf("Fecha ticket de compra: %s", ticket.fecha);
+    puts("Productos del ticket");
+    imprimirListaProductos(ticket.productos, ticket.cantidadProductos);
+    printf("Total: $ %.2lf\n", calcularTotalTicket(ticket.productos, ticket.cantidadProductos));
+    puts("\n\n-------------------------------------------------------------------------\n\n");
+}
+
+double calcularTotalTicket(struct ProductoLista lista[], int cantidad)
+{
+    double total = 0;
+    for (int i = 0; i < cantidad; i++)
+    {
+        total += lista[i].total;
+    }
+    return total;
+}
 /* -----------------------------Interfaz principal servidor ------------------------ */
 
 void interfazPrincipalServidor () 
 {
-    char opcion, repetir;
+    int opcion, repetir;
     do
     {
         system("clear");
@@ -276,25 +410,26 @@ void interfazPrincipalServidor ()
         puts("5.- Incrementar la existencia de un producto");
         puts("6.- Decrementar la existencia de un producto");
         puts("7.- Mostrar listado del almacen");
-        puts("8.- Salir del sistema");
+        puts("8.- Agregar nuevo ticket de compra");
+        puts("9.- Buscar ticket de compra");
+        puts("10.- Mostrar listado de tickets de compra");
+        puts("11.- Salir del sistema");
         puts("¿Que accion deseas realizar? ");
         __fpurge(stdin);
-        opcion = getc(stdin);
+        scanf("%d", &opcion);
         seleccionDeOpcion(opcion);
         puts("Ingresa 1 para volver al menu principal o ingresa 0 para salir del sistema");
         __fpurge(stdin);
-        repetir = getc(stdin);
-    } while (repetir != '0');
+        scanf("%d", &repetir);
+    } while (repetir);
 }
 
 void seleccionDeOpcion (char opcion)
 {
-    char idProducto[30], nombreProducto[100], descripcion[100];
-    float precioProducto;
-    int existenciaProducto;
+    char idProducto[30], idTicketCompra[30];
     switch (opcion)
     {
-    case '1':
+    case 1:
         /* Agrega nuevo producto al almacen */
         system("clear");
         if(registrarNuevoProducto(tomarDatosProducto()))
@@ -306,7 +441,7 @@ void seleccionDeOpcion (char opcion)
             puts("El ID ingresado ya se encuentra registrado en el almacen");
         }
         break;
-    case '2':
+    case 2:
         /* Modificar datos de un producto */
         puts("Ingresa el ID producto a modificar: ");
         __fpurge(stdin);
@@ -320,7 +455,7 @@ void seleccionDeOpcion (char opcion)
             puts("\n Error al modificar producto\n");
         }
         break;
-    case '3':
+    case 3:
         /* Buscar datos de un producto */
         system("clear");
         puts("Ingresa el ID producto a buscar: ");
@@ -329,14 +464,14 @@ void seleccionDeOpcion (char opcion)
         if(validarExistenciaProducto(idProducto))
         {
             system("clear");
-            puts("Datos del producto solicitado");
+            puts("Datos del producto solicitado\n\n");
             imprimirProducto(buscarProducto(idProducto));
         }else{
             system("clear");
             puts("No existe producto en el almacen con el ID ingresado");
         }
         break;
-    case '4':
+    case 4:
         /*Elimina un producto*/
         puts("Ingresa el ID producto a modificar: ");
         __fpurge(stdin);
@@ -359,18 +494,47 @@ void seleccionDeOpcion (char opcion)
             puts("No existe producto en el almacen con el ID ingresado");
         }
         break;
-    case '5':
+    case 5:
 
         break;
-    case '6':
+    case 6:
         break;
-    case '7':
+    case 7:
         /* Mostrar listado del almacen */
         system("clear");
         puts("===== Lista de productos en almacen ====\n\n");
         mostrarProductos();
         break;
-    case '8':
+    case 8:
+        system("clear");
+        if(registrarTicketDeCompra(tomarDatosTicketDeCompra()))
+        {
+            puts("Ticket de compra registrado exitosamente");
+        }else {
+            puts("Ya existe un ticket de compra con el ID ingresado");
+        }
+        break;
+    case 9:
+        system("clear");
+        puts("Ingresa el ID del ticker de compra a buscar: ");
+        __fpurge(stdin);
+        fgets(idTicketCompra, 30, stdin);
+        if(verificarExistenciaTicketDeCompra(idTicketCompra))
+        {
+            system("clear");
+            puts("Datos del producto solicitado\n\n");
+            imprimirTicketDeCompra(buscarTicketDeCompra(idTicketCompra));
+        }else{
+            system("clear");
+            puts("No existe producto en el almacen con el ID ingresado");
+        }
+        break;
+    case 10:
+        system("clear");
+        puts("==== Lista de tickets de compra ====\n\n");
+        mostrarTicketsDeCompra();
+        break;
+    case 11:
         /* Salir del sistema */
         exit(EXIT_SUCCESS);
         break;

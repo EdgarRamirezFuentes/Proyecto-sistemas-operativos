@@ -22,21 +22,32 @@ struct Producto
     int existencia;
 };
 
-struct Ticket_venta 
-{
+struct ProductoLista {
     char id[30];
-    char fecha[70];
-    struct Producto productos[100];
+    char nombre[100];
+    int cantidad;
+    float precio;
     float total;
 };
 
-struct Ticket_compra
+struct TicketVenta 
 {
     char id[30];
     char fecha[70];
-    struct Producto productos[100];
+    struct ProductoLista productos[100];
+    int cantidadProductos;
     float total;
 };
+
+struct TicketCompra
+{
+    char id[30];
+    char fecha[70];
+    int cantidadProductos;
+    struct ProductoLista productos[100];
+    float total;
+};
+
 
 /*----------------- Actividades de manejo de archivos -------------- */
 
@@ -59,9 +70,14 @@ struct Producto buscarProducto(char*);
 void imprimirProducto(struct Producto);
     /* Gestión de tickets de compra */
 void mostrarTicketsDeCompra();
-void buscarTicketDeCompra(char*);
-void generarTicketDeCompra(struct Ticket_compra);
-
+struct TicketCompra buscarTicketDeCompra(char*);
+int registrarTicketDeCompra(struct TicketCompra);
+struct TicketCompra tomarDatosTicketDeCompra();
+void agregarProductoLista(struct ProductoLista[], int);
+void imprimirListaProductos(struct ProductoLista[], int);
+int verificarExistenciaTicketDeCompra(char*);
+void imprimirTicketDeCompra(struct TicketCompra);
+double calcularTotalTicket(struct ProductoLista[], int);
 /* Interfaz principal servidor */
 void interfazPrincipalServidor();
 void seleccionDeOpcion(char);
