@@ -262,7 +262,30 @@ void incrementarExistenciaProducto(char *idProducto,int cantidad)
 
 void decrementarExistenciaProducto(char *idProducto,int cantidad) 
 {
-   
+   FILE *decrementar;
+   int pos;
+   struct Producto producto;
+
+    decrementar=fopen("./productos.dat","r+b");
+    if (decrementar==NULL)
+        exit(1); 
+
+    fread(&producto, sizeof(struct Producto), 1, decrementar);
+
+    while(!feof(decrementar))
+    {
+        if(!strcmp(idProducto,producto.id))
+        {
+            producto.existencia=producto.existencia-cantidad;
+            pos=ftell(decrementar)-sizeof(struct Producto);
+            fseek(decrementar,pos,SEEK_SET);
+            fwrite(&producto, sizeof(struct Producto), 1, decrementar);
+            break;
+        }
+        fread(&producto, sizeof(struct Producto), 1, decrementar);
+    }
+    
+    fclose(decrementar);
 }
 
     /* Gestión de tickets de compra */
@@ -425,8 +448,10 @@ void modificarTicketCompra(char *idticketCompra)
     FILE *historialTicketsDeCompra;
     char opcion;
     int existe=0,pos;
-    historialTicketsDeCompra = fopen("./ticketsCompra.dat", "r+b");
     struct TicketCompra ticket,tc;
+
+
+    historialTicketsDeCompra = fopen("./ticketsCompra.dat", "r+b");
     fread(&ticket, sizeof(struct TicketCompra), 1, historialTicketsDeCompra);
     while(!feof(historialTicketsDeCompra))
     {
@@ -462,6 +487,9 @@ void modificarTicketCompra(char *idticketCompra)
     }
     fclose(historialTicketsDeCompra);
 }
+
+
+
 /* -----------------------------Interfaz principal servidor ------------------------ */
 
 void interfazPrincipalServidor () 
@@ -481,7 +509,7 @@ void interfazPrincipalServidor ()
         puts("8.- Agregar nuevo ticket de compra");
         puts("9.- Buscar ticket de compra");
         puts("10.- Mostrar listado de tickets de compra");
-        puts("11.- Eliminar registro de un ticket");
+        puts("11.- Eliminar registros de un ticket");
         puts("12.- Modificar ticket");
         puts("13.- Salir del sistema");
         puts("¿Que accion deseas realizar? ");
@@ -568,6 +596,7 @@ void seleccionDeOpcion (char opcion)
 
         break;
     case 6:
+
         break;
     case 7:
         /* Mostrar listado del almacen */
@@ -586,7 +615,7 @@ void seleccionDeOpcion (char opcion)
         break;
     case 9:
         system("clear");
-        puts("Ingresa el ID del ticker de compra a buscar: ");
+        puts("Ingresa el ID del ticket de compra a buscar: ");
         __fpurge(stdin);
         fgets(idTicketCompra, 30, stdin);
         if(verificarExistenciaTicketDeCompra(idTicketCompra))
@@ -605,8 +634,20 @@ void seleccionDeOpcion (char opcion)
         mostrarTicketsDeCompra();
         break;
     case 11:
+        /*Eliminar registros de un ticket*/
         system("clear");
-        
+         puts("Ingresa el ID del ticket de compra a eliminar: ");
+        __fpurge(stdin);
+        fgets(idTicketCompra, 30, stdin);
+        if(verificarExistenciaTicketDeCompra(idTicketCompra))
+        {
+             
+        }
+        else
+        {
+            system("clear");
+            puts("No existe producto en el almacen con el ID ingresado");
+        }
         break;
     case 12: /*Modifica algun dato del ticket*/
         system("clear");
