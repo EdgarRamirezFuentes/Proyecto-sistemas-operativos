@@ -231,14 +231,38 @@ void imprimirProducto(struct Producto producto)
     puts("\n\n-------------------------------------------------------------------------\n\n");
 }
 
-void incrementarExistenciaProducto(char *idProducto, struct Producto* producto) 
+void incrementarExistenciaProducto(char *idProducto,int cantidad) 
 {
+   FILE *incrementar;
+   int pos;
+   struct Producto producto;
+
+    incrementar=fopen("./productos.dat","r+b");
+    if (incrementar==NULL)
+        exit(1); 
+
+    fread(&producto, sizeof(struct Producto), 1, incrementar);
+
+    while(!feof(incrementar))
+    {
+        if(!strcmp(idProducto,producto.id))
+        {
+            producto.existencia=producto.existencia+cantidad;
+            pos=ftell(incrementar)-sizeof(struct Producto);
+            fseek(incrementar,pos,SEEK_SET);
+            fwrite(&producto, sizeof(struct Producto), 1, incrementar);
+            break;
+        }
+        fread(&producto, sizeof(struct Producto), 1, incrementar);
+    }
+    
+    fclose(incrementar);
 
 }
 
-void decrementarExistenciaProducto(char *idProducto) 
+void decrementarExistenciaProducto(char *idProducto,int cantidad) 
 {
-
+   
 }
 
     /* Gestión de tickets de compra */
@@ -339,6 +363,7 @@ void agregarProductoLista(struct ProductoLista lista[], int posicion)
     puts("Ingresa la cantidad del producto: ");
     __fpurge(stdin);
     scanf("%d", &lista[posicion].cantidad);
+    incrementarExistenciaProducto(idProducto,lista[posicion].cantidad);
     puts("Ingresa el precio del producto: ");
     __fpurge(stdin);
     scanf("%f", &lista[posicion].precio);
@@ -413,7 +438,9 @@ void interfazPrincipalServidor ()
         puts("8.- Agregar nuevo ticket de compra");
         puts("9.- Buscar ticket de compra");
         puts("10.- Mostrar listado de tickets de compra");
-        puts("11.- Salir del sistema");
+        puts("11.- Eliminar registro de un ticket");
+        puts("12.- Modificar ticket");
+        puts("13.- Salir del sistema");
         puts("¿Que accion deseas realizar? ");
         __fpurge(stdin);
         scanf("%d", &opcion);
@@ -535,6 +562,11 @@ void seleccionDeOpcion (char opcion)
         mostrarTicketsDeCompra();
         break;
     case 11:
+        /*Eliminar registro de un ticket*/
+        system("clear");
+        
+        break;
+    case 12:
         /* Salir del sistema */
         exit(EXIT_SUCCESS);
         break;

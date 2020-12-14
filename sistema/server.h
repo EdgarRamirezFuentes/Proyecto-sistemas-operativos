@@ -64,8 +64,8 @@ int validarExistenciaProducto(char*);
 int modificarProducto(char*);
 int eliminarProducto(char*);
 void mostrarProductos();
-void incrementarExistenciaProducto(char*, struct Producto*);
-void decrementarExistenciaProducto(char*);
+void incrementarExistenciaProducto(char*,int);
+void decrementarExistenciaProducto(char*,int);
 struct Producto buscarProducto(char*);
 void imprimirProducto(struct Producto);
     /* Gestión de tickets de compra */
