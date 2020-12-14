@@ -419,6 +419,49 @@ double calcularTotalTicket(struct ProductoLista lista[], int cantidad)
     }
     return total;
 }
+
+void modificarTicketCompra(char *idticketCompra)
+{
+    FILE *historialTicketsDeCompra;
+    char opcion;
+    int existe=0,pos;
+    historialTicketsDeCompra = fopen("./ticketsCompra.dat", "r+b");
+    struct TicketCompra ticket,tc;
+    fread(&ticket, sizeof(struct TicketCompra), 1, historialTicketsDeCompra);
+    while(!feof(historialTicketsDeCompra))
+    {
+        if(!strcmp(idticketCompra, ticket.id))
+        {
+            do
+            {
+                printf("\n ¿Que dato del ticket desea modificar? \n");
+                printf("\n 1. Fecha \n");
+                printf("\n 2. Cantidad de productos \n");
+                scanf("%c",&opcion);
+            }
+            while(opcion!='1' && opcion!='2');
+
+            switch(opcion)
+            {
+                case '1':
+                    puts("Ingrese la fecha nueva del ticket: ");
+                    __fpurge(stdin);
+                    fgets(ticket.fecha,70,stdin);
+                    pos=ftell(historialTicketsDeCompra)-sizeof(struct TicketCompra);
+                    fseek(historialTicketsDeCompra,pos,SEEK_SET);
+                    fwrite(&ticket, sizeof(struct TicketCompra), 1, historialTicketsDeCompra);
+                    printf("Se modifico la fecha con exito.\n");
+                    existe=1;
+                break;
+                case '2':
+                    
+                break;
+            }
+        }
+        fread(&ticket, sizeof(struct TicketCompra), 1, historialTicketsDeCompra);
+    }
+    fclose(historialTicketsDeCompra);
+}
 /* -----------------------------Interfaz principal servidor ------------------------ */
 
 void interfazPrincipalServidor () 
@@ -562,11 +605,24 @@ void seleccionDeOpcion (char opcion)
         mostrarTicketsDeCompra();
         break;
     case 11:
-        /*Eliminar registro de un ticket*/
         system("clear");
         
         break;
-    case 12:
+    case 12: /*Modifica algun dato del ticket*/
+        system("clear");
+        puts("Ingresa el ID del ticket a modificar: ");
+        __fpurge(stdin);
+        fgets(idTicketCompra, 30, stdin);
+        if(verificarExistenciaTicketDeCompra(idTicketCompra))
+        {
+            modificarTicketCompra(idTicketCompra);    
+        }
+        else
+        {
+            puts("No existe producto en el almacen con el ID ingresado");
+        }
+        break;
+    case 13:
         /* Salir del sistema */
         exit(EXIT_SUCCESS);
         break;

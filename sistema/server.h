@@ -70,6 +70,7 @@ struct Producto buscarProducto(char*);
 void imprimirProducto(struct Producto);
     /* Gestión de tickets de compra */
 void mostrarTicketsDeCompra();
+void modificarTicketCompra(char*);
 struct TicketCompra buscarTicketDeCompra(char*);
 int registrarTicketDeCompra(struct TicketCompra);
 struct TicketCompra tomarDatosTicketDeCompra();
