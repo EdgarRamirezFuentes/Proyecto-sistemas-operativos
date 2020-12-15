@@ -571,7 +571,7 @@ void seleccionDeOpcion (char opcion)
         break;
     case 4:
         /*Elimina un producto*/
-        puts("Ingresa el ID producto a modificar: ");
+        puts("Ingresa el ID producto: ");
         __fpurge(stdin);
         fgets(idProducto, 30, stdin);
         if(validarExistenciaProducto(idProducto))
