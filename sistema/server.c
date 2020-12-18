@@ -457,31 +457,14 @@ void modificarTicketCompra(char *idticketCompra)
     {
         if(!strcmp(idticketCompra, ticket.id))
         {
-            do
-            {
-                printf("\n ¿Que dato del ticket desea modificar? \n");
-                printf("\n 1. Fecha \n");
-                printf("\n 2. Cantidad de productos \n");
-                scanf("%c",&opcion);
-            }
-            while(opcion!='1' && opcion!='2');
-
-            switch(opcion)
-            {
-                case '1':
-                    puts("Ingrese la fecha nueva del ticket: ");
-                    __fpurge(stdin);
-                    fgets(ticket.fecha,70,stdin);
-                    pos=ftell(historialTicketsDeCompra)-sizeof(struct TicketCompra);
-                    fseek(historialTicketsDeCompra,pos,SEEK_SET);
-                    fwrite(&ticket, sizeof(struct TicketCompra), 1, historialTicketsDeCompra);
-                    printf("Se modifico la fecha con exito.\n");
-                    existe=1;
-                break;
-                case '2':
-                    
-                break;
-            }
+            puts("Ingrese la fecha nueva del ticket: ");
+            __fpurge(stdin);
+            fgets(ticket.fecha,70,stdin);
+            pos=ftell(historialTicketsDeCompra)-sizeof(struct TicketCompra);
+            fseek(historialTicketsDeCompra,pos,SEEK_SET);
+            fwrite(&ticket, sizeof(struct TicketCompra), 1, historialTicketsDeCompra);
+            printf("Se modifico la fecha con exito.\n");
+            existe=1;
         }
         fread(&ticket, sizeof(struct TicketCompra), 1, historialTicketsDeCompra);
     }
@@ -509,9 +492,8 @@ void interfazPrincipalServidor ()
         puts("8.- Agregar nuevo ticket de compra");
         puts("9.- Buscar ticket de compra");
         puts("10.- Mostrar listado de tickets de compra");
-        puts("11.- Eliminar registros de un ticket");
-        puts("12.- Modificar ticket");
-        puts("13.- Salir del sistema");
+        puts("11.- Modificar fecha de un ticket");
+        puts("12.- Salir del sistema");
         puts("¿Que accion deseas realizar? ");
         __fpurge(stdin);
         scanf("%d", &opcion);
@@ -540,6 +522,7 @@ void seleccionDeOpcion (char opcion)
         }
         break;
     case 2:
+        system("clear");
         /* Modificar datos de un producto */
         puts("Ingresa el ID producto a modificar: ");
         __fpurge(stdin);
@@ -571,6 +554,7 @@ void seleccionDeOpcion (char opcion)
         break;
     case 4:
         /*Elimina un producto*/
+        system("clear");
         puts("Ingresa el ID producto: ");
         __fpurge(stdin);
         fgets(idProducto, 30, stdin);
@@ -633,23 +617,7 @@ void seleccionDeOpcion (char opcion)
         puts("==== Lista de tickets de compra ====\n\n");
         mostrarTicketsDeCompra();
         break;
-    case 11:
-        /*Eliminar registros de un ticket*/
-        system("clear");
-         puts("Ingresa el ID del ticket de compra a eliminar: ");
-        __fpurge(stdin);
-        fgets(idTicketCompra, 30, stdin);
-        if(verificarExistenciaTicketDeCompra(idTicketCompra))
-        {
-             
-        }
-        else
-        {
-            system("clear");
-            puts("No existe producto en el almacen con el ID ingresado");
-        }
-        break;
-    case 12: /*Modifica algun dato del ticket*/
+    case 11: /*Modifica algun dato del ticket*/
         system("clear");
         puts("Ingresa el ID del ticket a modificar: ");
         __fpurge(stdin);
@@ -663,7 +631,7 @@ void seleccionDeOpcion (char opcion)
             puts("No existe producto en el almacen con el ID ingresado");
         }
         break;
-    case 13:
+    case 12:
         /* Salir del sistema */
         exit(EXIT_SUCCESS);
         break;
