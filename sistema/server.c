@@ -577,10 +577,30 @@ void seleccionDeOpcion (char opcion)
         }
         break;
     case 5:
-
+        system("clear");
+        puts("Ingresa el ID del producto: ");
+        __fpurge(stdin);
+        fgets(idProducto, 30, stdin);
+        if(validarExistenciaProducto(idProducto))
+        {
+            int cantidad;
+            puts("Cantidad a incrementar: ");
+            scanf("%d", &cantidad);
+            incrementarExistenciaProducto(idProducto, cantidad);
+        }
         break;
     case 6:
-
+        system("clear");
+        puts("Ingresa el ID del producto: ");
+        __fpurge(stdin);
+        fgets(idProducto, 30, stdin);
+        if(validarExistenciaProducto(idProducto))
+        {
+            int cantidad;
+            puts("Cantidad a decrementar: ");
+            scanf("%d", &cantidad);
+            decrementarExistenciaProducto(idProducto, cantidad);
+        }
         break;
     case 7:
         /* Mostrar listado del almacen */
